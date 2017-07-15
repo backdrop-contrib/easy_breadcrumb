@@ -96,6 +96,11 @@ class EasyBreadcrumbConstants {
   const DB_VAR_SEGMENT_TEXT_AS_TITLE = 'easy_breadcrumb-segment_text_as_title';
 
   /**
+   * Transformation mode for crumbs without HTML tags.
+   */
+  const DB_VAR_HTML_TAGS = 'easy_breadcrumb-html_tags';
+
+  /**
    * Variables for truncator.
    */
   const DB_VAR_TRUNCATOR_MODE = 'easy_breadcrumb_truncator_mode';

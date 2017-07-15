@@ -50,6 +50,13 @@ function _easy_breadcrumb_general_settings_form() {
     '#default_value' => $excluded_paths,
   );
 
+  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_HTML_TAGS] = array(
+    '#type' => 'checkbox',
+    '#title' => t("Allow HTML tags in crumbs."),
+    '#description' => t("Uncheck it if you don't want to allow HTML tags in your crumbs."),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_HTML_TAGS, TRUE),
+  );
+  
   $fieldset_general[EasyBreadcrumbConstants::DB_VAR_INCLUDE_HOME_SEGMENT] = array(
     '#type' => 'checkbox',
     '#title' => t("Include the front page as a segment in the breadcrumb"),
