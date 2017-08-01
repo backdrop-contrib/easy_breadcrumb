@@ -50,6 +50,15 @@ function _easy_breadcrumb_general_settings_form() {
     '#default_value' => $excluded_paths,
   );
 
+  $replaced_titles = variable_get(EasyBreadcrumbConstants::DB_VAR_REPLACED_TITLES);
+
+  $fieldset_general[EasyBreadcrumbConstants::DB_VAR_REPLACED_TITLES] = array(
+    '#type' => 'textarea',
+    '#title' => t('Breadcrumbs to be replaced while generating segments'),
+    '#description' => t('Enter a line separated list of breadcrumbs with their replacements seperated by ::. For example TITLE::DIFFERENT_TITLE'),
+    '#default_value' => $replaced_titles,
+  );
+
   $fieldset_general[EasyBreadcrumbConstants::DB_VAR_HTML_TAGS] = array(
     '#type' => 'checkbox',
     '#title' => t("Allow HTML tags in crumbs."),

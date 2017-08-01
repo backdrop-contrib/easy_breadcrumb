@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @file
  * Module's contants.
  */
 
 /**
- * EasyBreadcrumb module's contants
+ * EasyBreadcrumb module's contants.
  */
 class EasyBreadcrumbConstants {
 
@@ -30,7 +31,12 @@ class EasyBreadcrumbConstants {
   const DB_VAR_EXCLUDED_PATHS = 'easy_breadcrumb-excluded_paths';
 
   /**
-   *  Separator between segments.
+   * List of titles to be replaced.
+   */
+  const DB_VAR_REPLACED_TITLES = 'easy_breadcrumb-replaced_titles';
+
+  /**
+   * Separator between segments.
    */
   const DB_VAR_SEGMENTS_SEPARATOR = 'easy_breadcrumb-segments_separator';
 

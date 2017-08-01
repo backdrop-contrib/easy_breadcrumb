@@ -225,7 +225,7 @@ function _easy_breadcrumb_build_items() {
       $segment_text = $alias_arr[$idx_0];
       // Normalized segment's text (e.g. 'Blog');
       $segment_title = _easy_breadcrumb_obtain_segment_title($segment_normal_path, $segment_valid_path, $segment_text);
-
+      _easy_breadcrumb_check_replaced_title($segment_title);
       if ($segment_valid_path || $include_invalid_paths) {
         $breadcrumb[] = _easy_breadcrumb_build_item($segment_title, $segments_classes, $segment_url, $segment_valid_path);
       }
@@ -241,6 +241,9 @@ function _easy_breadcrumb_build_items() {
       // The title is the last segment in the URL.
       $segment_text = $alias_arr[$segments_quantity - 1];
       $segment_title = _easy_breadcrumb_obtain_page_title($segment_text);
+
+      _easy_breadcrumb_check_replaced_title($segment_title);
+
       $title_segment_as_link = variable_get(EasyBreadcrumbConstants::DB_VAR_TITLE_SEGMENT_AS_LINK, FALSE);
       // If the page's title will be a link or just a text.
       $breadcrumb[] = _easy_breadcrumb_build_item($segment_title, $segments_classes, $alias, $title_segment_as_link);
@@ -338,6 +341,35 @@ function _easy_breadcrumb_validate_segment_path($segment_path) {
   $is_valid_path = drupal_valid_path($segment_path);
 
   return $is_valid_path;
+}
+
+/**
+ * Check if the title should be replaced.
+ *
+ * @param string $segment_title
+ *   Segment's title by reference.
+ *
+ * @return mix
+ *   String with segment title if necessary or FALSE otherwise.
+ */
+function _easy_breadcrumb_check_replaced_title(&$segment_title) {
+  $replaced_titles = variable_get(EasyBreadcrumbConstants::DB_VAR_REPLACED_TITLES);
+
+  if (empty($replaced_titles)) {
+    return FALSE;
+  }
+
+  $map_values = preg_split('/[\r\n]/', $replaced_titles);
+
+  foreach ($map_values as $map_value) {
+    $values = explode("::", $map_value);
+    if (count($values) == 2) {
+      $replaced_titles_values[$values[0]] = $values[1];
+    }
+  }
+
+  _easy_breadcrumb_apply_title_replacement($segment_title, $replaced_titles_values);
+
 }
 
 /**
@@ -466,4 +498,21 @@ function _easy_breadcrumb_normalize_text($raw_text) {
   }
 
   return $normalized_text;
- }
+}
+
+/**
+ * Apply title replacements.
+ *
+ * @param String $title
+ *   Page title.
+ *
+ * @param Array $replacements.
+ *   Replacement rules map.
+ */
+function _easy_breadcrumb_apply_title_replacement(&$title, $replacements) {
+  if (!is_string($title)) return;
+
+  if (array_key_exists($title, $replacements)) {
+    $title = $replacements[$title];
+  }
+}
