@@ -1,54 +1,83 @@
-The Easy Breadcrumb module provides a plug-and-play block to be embedded in your
-pages, typically at some place near the page's header. Easy Breadcrumb takes
-advantage of the work you've already done for generating your paths' alias,
-while it naturally encourages the creation of semantic and consistent paths.
-This modules is currently available for Drupal 6.x and 7.x.
+CONTENTS OF THIS FILE
+---------------------
+
+ * Introduction
+ * Requirements
+ * Installation
+ * Configuration
+ * Maintainers
+
+
+INTRODUCTION
+------------
+
+The Easy Breadcrumb module provides configurable breadcrumbs that improve on
+core breadcrumbs by including the current page title as an unlinked crumb which
+follows breadcrumb best-practices
+(URL "https://www.nngroup.com/articles/breadcrumb-navigation-useful/").
+
+Easy Breadcrumb takes advantage of the work you've already done for generating
+your path aliases, while it naturally encourages the creation of semantic
+and consistent paths. This module is currently available for Drupal 6.x, 7.x,
+and 8.x.x.
 
 Easy Breadcrumb uses the current URL (path alias) and the current page's title
 to automatically extract the breadcrumb's segments and its respective links.
-Easy Breadcrumb is really a plug and play module, it auto-generates the
-breadcrumb by using the current URL, the user needs to do anything to get it
-working.
+The module is really a plug and play module because it auto-generates the
+breadcrumb by using the current URL and nothing extra is needed.
 
-For example, having an URL like "gallery/videos/once-a-time-in-cartagena",
-EasyBreadcrumb will automatically produces the breadcrumb
-"Home >> Gallery >> Videos >> Once a time in Cartagena" or
-"Home >> Videos >> Once a Time in Cartagena". Again, the breadcrumb presentation
-will vary depending on your module's settings.
+ * For a full description of the module visit:
+   https://www.drupal.org/project/easy_breadcrumb
+   or
+   https://www.drupal.org/docs/8/improve-the-breadcrumbs
 
-Requirements
-  * Pathauto
+ * To submit bug reports and feature suggestions, or to track changes visit:
+   https://www.drupal.org/node/2929013
 
-Recommended modules:
-  * Transliteration
-      is useful if your site is likely contain characters beyond ASCII
-      128. Like: ñ, ó, among others. After activate it, go to
-      admin/config/search/path/settings and check the option Transliterate
-      prior to creating alias.
 
-Configuration:
+REQUIREMENTS
+------------
 
-  To start using it, just go to the admin modules page
-  (URL "admin/modules/list"), locate it under the category "others" and activate
-  it, then go to the blocks list page (URL "admin/structure/block") and locate
-  the block named "Easy Breadcrumb", and configure it like any other block
-  (region, URLs, etc.).
+This module requires the following:
 
-  The configuration page of this module is under
-  "Admin > Configuration > User Interface > Easy Breadcrumb"
-  (URL "admin/config/user-interface/easy-breadcrumb").
+ * Pathauto - https://www.drupal.org/project/pathauto
 
-  Configurable parameters:
 
-    * Disable the default Drupal's breadcrumb.
-    * Include / Exclude invalid path alias as plain-text segments.
-    * Include / Exclude the front page as a segment in the breadcrumb.
-    * Include / Exclude the current page's title as a segment in the breadcrumb.
-    * Use the real page's title when it is available instead of always deducing
-      it from the URL.
-    * Print the page's title as a link or as plain-text segment.
-    * Use a custom separator between the breadcrumb's segments.
-    * Choose a transformation mode for the segments' title.
-    * Make the 'capitalizator' ignore some words (words not to be capitalized).
+INSTALLATION
+------------
 
-Module Page: http://drupal.org/project/easy_breadcrumb
+Install the Easy Breadcrumb module as you would normally install a contributed
+Drupal module. Visit https://www.drupal.org/node/895232 for further
+information.
+
+
+CONFIGURATION
+-------------
+
+    1. Navigate to Administration > Modules and enable the module. The system
+       breadcrumb block has now been updated.
+    2. Navigate to Administration > Configuration > User Interface > Easy
+       Breadcrumb for configurations. Save Configurations.
+
+Configurable parameters:
+ * Include / Exclude the front page as a segment in the breadcrumb.
+ * Include / Exclude the current page as the last segment in the breadcrumb.
+ * Use the real page title when it is available instead of always deducing it
+   from the URL.
+ * Print the page's title segment as a link.
+ * Make the language path prefix a segment on multilingual sites where a path
+   prefix ("/en") is used.
+ * Use menu title as fallback instead of raw path component.
+ * Remove segments of the breadcrumb that are identical.
+ * Use a custom separator between the breadcrumb's segments. (TODO)
+ * Choose a transformation mode for the segments' title.(TODO)
+ * Make the 'capitalizator' ignore some words. (TODO)
+
+
+MAINTAINERS
+-----------
+
+ * Greg Boggs - https://www.drupal.org/u/greg-boggs
+ * Balazs Janos Tatar (tatarbj) - https://www.drupal.org/u/tatarbj
+ * Roger Padilla (sonemonu) - https://www.drupal.org/u/sonemonu
+ * Jeff Mahoney (loopduplicate) - https://www.drupal.org/u/loopduplicate
