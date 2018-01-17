@@ -34,6 +34,32 @@ function easy_breadcrumb_init() {
 }
 
 /**
+ * Implements hook_help().
+ */
+function easy_breadcrumb_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#easy_breadcrumb':
+      $readme = file_get_contents(dirname(__FILE__) . '/README.md');
+      $output = '';
+
+      if (module_exists('markdown')) {
+        $filters = module_invoke('markdown', 'filter_info');
+        $info = $filters['filter_markdown'];
+
+        if (function_exists($info['process callback'])) {
+          $output = $info['process callback']($readme, NULL);
+        }
+      }
+
+      if ($output === '') {
+        $output = '<pre>' . $readme . '</pre>';
+      }
+
+      return $output;
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function easy_breadcrumb_menu() {
