@@ -233,6 +233,7 @@ function _easy_breadcrumb_build_items() {
     // Iterates over the segments of the current URL
     // ("blog/article/hello-world") excepting the last segment
     // (the title, 'hello-world' in that case).
+    $last_segment_title = '';
     for ($idx_0 = 0, $idx_1 = 1; $idx_1 < $segments_quantity; ++$idx_0, ++$idx_1) {
       // Build an array containing the URL of the segment being currently
       // processed. E.g., having $alias as "blog/article/hello-world", at the
@@ -245,7 +246,7 @@ function _easy_breadcrumb_build_items() {
       // Jump to the next segment if this url is configured to be excluded.
       $excluded_path = _easy_breadcrumb_check_excluded_path($segment_url);
       if ($excluded_path) {
-          continue;
+        continue;
       }
 
       $segments_classes[1] = 'easy-breadcrumb_segment-' . $idx_1;
@@ -260,9 +261,19 @@ function _easy_breadcrumb_build_items() {
       // Normalized segment's text (e.g. 'Blog');
       $segment_title = _easy_breadcrumb_obtain_segment_title($segment_normal_path, $segment_valid_path, $segment_text);
       _easy_breadcrumb_check_replaced_title($segment_title);
+
+      // Don't duplicate breadrcumbs for menu default local tasks.
+      if ($segment_title == $last_segment_title) {
+        $item = menu_get_item($segment_url);
+        if ($item['type'] != MENU_VISIBLE_IN_BREADCRUMB) {
+          continue;
+        }
+      }
+
       if ($segment_valid_path || $include_invalid_paths) {
         $breadcrumb[] = _easy_breadcrumb_build_item($segment_title, $segments_classes, $segment_url, $segment_valid_path);
       }
+      $last_segment_title = $segment_title;
     }
 
     // Gets the flag saying if the title should be appended to the breadcrumb.
@@ -429,7 +440,7 @@ function _easy_breadcrumb_check_excluded_path($url) {
   }
 
   drupal_alter('easy_breadcrumb_exclude_path', $excluded, $url);
-  
+
   return $excluded;
 }
 
