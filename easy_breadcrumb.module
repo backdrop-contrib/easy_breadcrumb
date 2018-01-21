@@ -136,9 +136,17 @@ function template_preprocess_easy_breadcrumb(&$variables) {
     $content = decode_entities($breadcrumb['content']);
     if (isset($breadcrumb['url'])) {
       $variables['breadcrumb'][$i] = '<span itemprop="title">';
-      $variables['breadcrumb'][$i] .= l($content, $breadcrumb['url'], array(
-        'attributes' => array('class' => $breadcrumb['class'])
+
+      $parsed_query = '';
+      $parsed_url = parse_url($breadcrumb['url']);
+      if (isset($parsed_url['query'])) {
+        parse_str($parsed_url['query'], $parsed_query);
+      }
+      $variables['breadcrumb'][$i] .= l($content, $parsed_url['path'], array(
+        'attributes' => array('class' => $breadcrumb['class']),
+        'query' => $parsed_query,
       ));
+
       $variables['breadcrumb'][$i] .= '</span>';
     }
     else {
