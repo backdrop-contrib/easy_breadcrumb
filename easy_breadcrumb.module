@@ -237,7 +237,7 @@ function _easy_breadcrumb_build_items() {
       // Jump to the next segment if this url is configured to be excluded.
       $excluded_path = _easy_breadcrumb_check_excluded_path($segment_url);
       if ($excluded_path) {
-          continue;
+        continue;
       }
 
       $segments_classes[1] = 'easy-breadcrumb_segment-' . $idx_1;
@@ -261,7 +261,7 @@ function _easy_breadcrumb_build_items() {
     $include_page_title_segment = variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_TITLE_SEGMENT, TRUE);
 
     // Adds the page's title to the breadcrumb.
-    if ($include_page_title_segment) {
+    if ($include_page_title_segment && (arg(0) != 'user')) {
       // Marks the page's-title-segment with an identifier class (useful for CSS).
       $segments_classes[1] = 'easy-breadcrumb_segment-title';
       // The title is the last segment in the URL.
@@ -421,7 +421,7 @@ function _easy_breadcrumb_check_excluded_path($url) {
   }
 
   drupal_alter('easy_breadcrumb_exclude_path', $excluded, $url);
-  
+
   return $excluded;
 }
 
