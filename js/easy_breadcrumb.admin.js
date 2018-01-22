@@ -2,12 +2,12 @@
  * @author Roger Padilla C.
  */
 
-(function (window, $, Drupal) {
+(function (window, $, Backdrop) {
   'use strict';
 
   var document = window.document;
 
-  Drupal.behaviors.easyBreadcrumbAdmin = {
+  Backdrop.behaviors.easyBreadcrumbAdmin = {
 
     attach: function (context, settings) {
 
@@ -30,4 +30,4 @@
     }
   };
 
-})(window, jQuery, Drupal);
+})(window, jQuery, Backdrop);
