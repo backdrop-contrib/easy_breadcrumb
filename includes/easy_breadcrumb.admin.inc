@@ -65,7 +65,7 @@ function _easy_breadcrumb_general_settings_form() {
     '#description' => t("Uncheck it if you don't want to allow HTML tags in your crumbs."),
     '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_HTML_TAGS, TRUE),
   );
-  
+
   $fieldset_general[EasyBreadcrumbConstants::DB_VAR_INCLUDE_HOME_SEGMENT] = array(
     '#type' => 'checkbox',
     '#title' => t("Include the front page as a segment in the breadcrumb"),
@@ -154,7 +154,7 @@ function _easy_breadcrumb_general_settings_form() {
     '#type' => 'textfield',
     '#title' => t('Segments separator'),
     '#description' => t("Separator to be used between the breadcrumb's segments."),
-    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR, '>>'),
+    '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR, '»'),
   );
 
   $fieldset_general[EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE] = array(
@@ -167,7 +167,7 @@ function _easy_breadcrumb_general_settings_form() {
       'ucall' => t("Capitalize all the letters of each word in the segment"),
       'ucforce' => t("Capitalize only the words that are set below"),
     ),
-    '#description' => t("Choose the transformation mode you want to apply to the segments' titles. E.g.: 'blog/once-a-time' -> 'Home >> Blog >> Once a Time'."),
+    '#description' => t("Choose the transformation mode you want to apply to the segments' titles. E.g.: 'blog/once-a-time' -> 'Home » Blog » Once a Time'."),
     '#default_value' => variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE, 'ucwords'),
   );
 
