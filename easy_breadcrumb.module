@@ -11,6 +11,15 @@
  */
 
 /**
+ * Implements hook_autoload_info().
+ */
+function easy_breadcrumb_autoload_info() {
+  return array(
+    'EasyBreadcrumbConstants' => 'includes/EasyBreadcrumbConstants.inc',
+  );
+}
+
+/**
  * Implements hook_permission().
  */
 function easy_breadcrumb_permission() {
@@ -100,6 +109,7 @@ function easy_breadcrumb_block_info() {
   $block = array();
   $block['easy_breadcrumb'] = array(
     'info' => t('Easy Breadcrumb'),
+    'description' => t('Replacement for the system breadcrumb block.'),
     'cache' => DRUPAL_CACHE_PER_PAGE,
   );
   return $block;
@@ -134,7 +144,6 @@ function template_preprocess_easy_breadcrumb(&$variables) {
   }
   foreach ($breadcrumbs as $i => $breadcrumb) {
     $content = decode_entities($breadcrumb['content']);
-    //$content = $breadcrumb['content'];
     if (isset($breadcrumb['url'])) {
       $variables['breadcrumb'][$i] = '<span itemprop="title">';
 
@@ -171,7 +180,7 @@ function _easy_breadcrumb_build_items() {
   // Array storing the breadcrumb's segments.
   $breadcrumb = array();
   // Default classes for the segments.
-  $segments_classes = array('easy-breadcrumb_segment');
+  $segments_classes = array('crumb');
   // Gets the flag saying if the front page segment should be included.
   $include_front_page_segment = variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_HOME_SEGMENT, TRUE);
 
@@ -179,7 +188,7 @@ function _easy_breadcrumb_build_items() {
   if ($include_front_page_segment) {
     $front_text = _easy_breadcrumb_obtain_home_title();
     // Marks the front--segment with an identifier class (useful for CSS).
-    $segments_classes[1] = 'easy-breadcrumb_segment-front';
+    $segments_classes[1] = 'crumb-front';
     // Adds a segment for the front page.
     $breadcrumb[] = _easy_breadcrumb_build_item($front_text, $segments_classes, '<front>');
   }
@@ -251,7 +260,7 @@ function _easy_breadcrumb_build_items() {
         continue;
       }
 
-      $segments_classes[1] = 'easy-breadcrumb_segment-' . $idx_1;
+      $segments_classes[1] = 'crumb-' . $idx_1;
       // Obtain the internal path it represents.
       $segment_normal_path = drupal_get_normal_path($segment_url);
 
@@ -284,7 +293,7 @@ function _easy_breadcrumb_build_items() {
     // Adds the page's title to the breadcrumb.
     if ($include_page_title_segment && (arg(0) != 'user')) {
       // Marks the page's-title-segment with an identifier class (useful for CSS).
-      $segments_classes[1] = 'easy-breadcrumb_segment-title';
+      $segments_classes[1] = 'crumb-title';
       // The title is the last segment in the URL.
       $segment_text = $alias_arr[$segments_quantity - 1];
       $segment_title = _easy_breadcrumb_obtain_page_title($segment_text);
@@ -495,7 +504,7 @@ function _easy_breadcrumb_normalize_text($raw_text) {
   // Gets the flag saying the capitalizator mode.
   $capitalizator_mode = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE, 'ucwords');
   if ($capitalizator_mode === 'ucwords') {
-    // Transforms the text 'once a time' to 'Once a Time'.
+    // Transforms the text 'your first post' to 'Your First Post'.
     // List of words to be ignored by the capitalizator.
     $ignored_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS, EasyBreadcrumbConstants::defaultIgnoredWords());
     $words_arr = explode(' ', $normalized_text);
@@ -510,11 +519,11 @@ function _easy_breadcrumb_normalize_text($raw_text) {
     $normalized_text = join(' ', $words_arr);
   }
   elseif ($capitalizator_mode === 'ucall') {
-    // Transforms the text 'once a time' to 'ONCE A TIME'.
+    // Transforms the text 'your first post' to 'YOUR FIRST POST'
     $normalized_text = drupal_strtoupper($normalized_text);
   }
   elseif ($capitalizator_mode === 'ucforce') {
-    // Transforms the text 'once a time' to 'once a TIME'.
+    // Transforms the text 'your first post' to 'your first POST'
     // List of words to be forced by the capitalizator.
     $forced_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS, '');
     // If case sensitivity is false make all the forced words uncapitalized by default.
@@ -542,7 +551,7 @@ function _easy_breadcrumb_normalize_text($raw_text) {
     $normalized_text = join(' ', $words_arr);
   }
   else {
-    // Transforms the text 'once a time' to 'Once a time' (ucfirst).
+    // Transforms the text 'your first post' to 'Your first post' (ucfirst).
     $normalized_text = drupal_ucfirst($normalized_text);
   }
 

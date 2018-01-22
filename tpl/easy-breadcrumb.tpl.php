@@ -1,10 +1,11 @@
 <?php if ($segments_quantity > 0): ?>
-  <div itemscope class="easy-breadcrumb" itemtype="<?php print $list_type; ?>">
+  <nav itemscope class="breadcrumb easy-breadcrumb" itemtype="<?php print $list_type; ?>" role="navigation">
+    <h2 class="element-invisible">You are here</h2>
     <?php foreach ($breadcrumb as $i => $item): ?>
       <?php print $item; ?>
-      <?php if ($i < $segments_quantity - $separator_ending): ?>
-         <span class="easy-breadcrumb_segment-separator"><?php print $separator; ?></span>
-      <?php endif; ?>
+        <?php if ($i < $segments_quantity - $separator_ending): ?>
+           <span class="separator"><?php print $separator; ?></span>
+        <?php endif; ?>
     <?php endforeach; ?>
-  </div>
+  </nav>
 <?php endif; ?>
