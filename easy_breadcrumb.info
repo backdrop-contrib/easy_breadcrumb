@@ -1,6 +1,6 @@
 type = module
 name = Easy Breadcrumb
-description = Provides a block with an alternative breadcrumb based on URLs.
+description = Provides a block with an alternative URL-based breadcrumb trail.
 backdrop = 1.x
 package = User interface
 configure = admin/config/user-interface/easy-breadcrumb

@@ -1,12 +1,13 @@
 Easy Breadcrumb
 ===============
 
-The Easy Breadcrumb module provides an additional improved breadcrumb block.
+The Easy Breadcrumb module provides a block with an alternative URL-based
+breadcrumb trail.
 
-The Easy Breadcrumb block uses the current URL alias and the current page's title
-to automatically extract the breadcrumbs and respective links. It also includes
-the current page title as the final unlinked crumb which follows breadcrumb
-best-practices. See
+The Easy Breadcrumb block uses the current URL alias and the current page's
+title to automatically extract the breadcrumbs and respective links. It also
+includes the current page title as the final unlinked crumb which follows
+breadcrumb best-practices. See
 https://www.nngroup.com/articles/breadcrumb-navigation-useful.
 
 Easy Breadcrumb takes advantage of the work you've already done for generating

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Provides a block with an alternative breadcrumb based on URLs.
+ * Provides a block with an alternative URL-based breadcrumb trail.
  */
 
 /**
