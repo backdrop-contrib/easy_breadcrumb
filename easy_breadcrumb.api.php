@@ -1,14 +1,14 @@
 <?php
 /**
  * @file
- * API documentation file for Easy Breadcrumb.
+ * API documentation.
  */
 
 /**
  * Allows modules to alter the path to calculate the breadcrumb.
  *
  * @param string $path
- *   The current drupal path returned by drupal_get_path_alias().
+ *   The current path returned by backdrop_get_path_alias().
  */
 function hook_easy_breadcrumb_path_alter(&$path) {
   // Replace the path to calculate the breadcrumb for

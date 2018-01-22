@@ -1,14 +1,13 @@
 <?php
 /**
  * @file
- * Install hooks.
+ * Install, uninstall, update, and requirement hooks.
  */
 
 /**
  * Implements hook_uninstall().
  */
 function easy_breadcrumb_uninstall() {
-
   require_once 'includes/EasyBreadcrumbConstants.inc';
 
   // Use reflection for getting constants.
@@ -25,8 +24,9 @@ function easy_breadcrumb_uninstall() {
 }
 
 /**
- * Theme-registry has to be flushed because of new tpl logic is implemented.
+ * Implements hook_update_last_removed().
  */
-function easy_breadcrumb_update_7001() {
-  drupal_theme_rebuild();
+function easy_breadcrumb_update_last_removed() {
+  // Drupal sites upgrading to Backdrop need to be on at least this version.
+  return 7001;
 }

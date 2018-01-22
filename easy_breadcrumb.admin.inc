@@ -12,7 +12,7 @@
  */
 function _easy_breadcrumb_general_settings_form() {
 
-  drupal_add_js(drupal_get_path('module', 'easy_breadcrumb') . '/js/easy_breadcrumb.admin.js');
+  backdrop_add_js(backdrop_get_path('module', 'easy_breadcrumb') . '/js/easy_breadcrumb.admin.js');
 
   // Fieldset for grouping general settings fields.
   $fieldset_general = array(
@@ -260,7 +260,7 @@ function _easy_breadcrumb_general_settings_form() {
         ':input[name="' . EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE . '"]' => array('!value' => 'ucforce'),
       )
     ),
-    '#description' => t('When unchecked, drupal will match both Drupal and drupaL.'),
+    '#description' => t('When unchecked, backdrop will match both Backdrop and BACKDROP.'),
   );
 
   $form['caps'][EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_FIRST_LETTER] = array(

@@ -1,13 +1,7 @@
 <?php
 /**
  * @file
- * The Easy Breadcrumb module provides a block to be embedded in any page,
- * typically at some place near the page's header.
- * Easy Breadcrumb uses the URL (path alias) and the current page's title
- * (when available) to obtain the breadcrumb's segments and its respective
- * links. The resulting block will be something like:
- * "Home » Contact Us" or "Home / Contact us".
- * Such presentation could vary depending on the configuration of the module.
+ * Provides a block with an alternative breadcrumb based on URLs.
  */
 
 /**
@@ -25,7 +19,7 @@ function easy_breadcrumb_autoload_info() {
 function easy_breadcrumb_permission() {
   return array(
     'administer easy_breadcrumb' => array(
-      'title' => t("Administer Easy Breadcrumb"),
+      'title' => t('Administer Easy Breadcrumb'),
       'description' => t('Perform administration tasks for the module Easy Breadcrumb.'),
     ),
   );
@@ -35,10 +29,10 @@ function easy_breadcrumb_permission() {
  * Implements hook_init().
  */
 function easy_breadcrumb_init() {
-  $disable_drupal_default_breadcrumb = variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, TRUE);
-  if ($disable_drupal_default_breadcrumb) {
+  $disable_backdrop_default_breadcrumb = variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, TRUE);
+  if ($disable_backdrop_default_breadcrumb) {
     // Sets the Drupal's default breadcrumb as an empty array to disable it.
-    drupal_set_breadcrumb(array());
+    backdrop_set_breadcrumb(array());
   }
 }
 
@@ -76,8 +70,8 @@ function easy_breadcrumb_menu() {
   $items['admin/config/user-interface/easy-breadcrumb'] = array(
     'title' => 'Easy Breadcrumb',
     'description' => "Controls settings for the module Easy Breadcrumb",
-    'file' => 'includes/easy_breadcrumb.admin.inc',
-    'page callback' => 'drupal_get_form',
+    'file' => 'easy_breadcrumb.admin.inc',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('_easy_breadcrumb_general_settings_form'),
     'access arguments' => array('administer easy_breadcrumb'),
   );
@@ -97,7 +91,7 @@ function easy_breadcrumb_theme($existing, $type, $theme, $path) {
         'separator_ending' => NULL,
       ),
       'template' => 'easy-breadcrumb',
-      'path' => drupal_get_path('module', 'easy_breadcrumb') . '/tpl',
+      'path' => backdrop_get_path('module', 'easy_breadcrumb') . '/templates',
     ),
   );
 }
@@ -194,7 +188,7 @@ function _easy_breadcrumb_build_items() {
   }
 
   // There won't be more segments if visiting the front page, the don't waste resources.
-  if (!drupal_is_front_page()) {
+  if (!backdrop_is_front_page()) {
     // Gets the flag saying the capitalizator mode.
     $capitalizator_mode = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE, 'ucwords');
 
@@ -210,7 +204,7 @@ function _easy_breadcrumb_build_items() {
           EasyBreadcrumbConstants::defaultExcludedPaths());
 
     // Obtains the alias of the current path.
-    $alias = drupal_get_path_alias();
+    $alias = backdrop_get_path_alias();
 
     // We need to pass our path through hook_url_outbound_alter(). This fixes
     // clean URLs not working when they don't exist in the {url_alias} table and
@@ -227,10 +221,10 @@ function _easy_breadcrumb_build_items() {
       'external' => FALSE,
     );
 
-    drupal_alter('url_outbound', $alias, $options, $normalized_path);
+    backdrop_alter('url_outbound', $alias, $options, $normalized_path);
 
     // Allow the alias to be altered.
-    drupal_alter('easy_breadcrumb_path', $alias);
+    backdrop_alter('easy_breadcrumb_path', $alias);
 
 
     // Get the segments of the current path.
@@ -262,7 +256,7 @@ function _easy_breadcrumb_build_items() {
 
       $segments_classes[1] = 'crumb-' . $idx_1;
       // Obtain the internal path it represents.
-      $segment_normal_path = drupal_get_normal_path($segment_url);
+      $segment_normal_path = backdrop_get_normal_path($segment_url);
 
       // Check if this is a valid path.
       $segment_valid_path = _easy_breadcrumb_validate_segment_path($segment_normal_path);
@@ -307,7 +301,7 @@ function _easy_breadcrumb_build_items() {
   }
 
   // Allow the entire breadcrumb to be altered.
-  drupal_alter('easy_breadcrumb_breadcrumb', $breadcrumb);
+  backdrop_alter('easy_breadcrumb_breadcrumb', $breadcrumb);
 
   return $breadcrumb;
 }
@@ -341,7 +335,7 @@ function _easy_breadcrumb_obtain_page_title($page_text) {
   $use_page_title_when_available = variable_get(EasyBreadcrumbConstants::DB_VAR_TITLE_FROM_PAGE_WHEN_AVAILABLE, TRUE);
   // Tries to get the title of the current page (if available).
   if ($use_page_title_when_available) {
-    $title = drupal_get_title();
+    $title = backdrop_get_title();
   }
   // Just deduce the title from the given fallback.
   if (!isset($title) || $title === '') {
@@ -396,7 +390,7 @@ function _easy_breadcrumb_build_item($item_title, $item_classes, $item_url, $as_
  *   true if the segment is a valid path, false otherwise.
  */
 function _easy_breadcrumb_validate_segment_path($segment_path) {
-  $is_valid_path = drupal_valid_path($segment_path);
+  $is_valid_path = backdrop_valid_path($segment_path);
 
   return $is_valid_path;
 }
@@ -452,7 +446,7 @@ function _easy_breadcrumb_check_excluded_path($url) {
     }
   }
 
-  drupal_alter('easy_breadcrumb_exclude_path', $excluded, $url);
+  backdrop_alter('easy_breadcrumb_exclude_path', $excluded, $url);
 
   return $excluded;
 }
@@ -509,18 +503,18 @@ function _easy_breadcrumb_normalize_text($raw_text) {
     $ignored_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS, EasyBreadcrumbConstants::defaultIgnoredWords());
     $words_arr = explode(' ', $normalized_text);
     // Transforms the non-ignored words of the segment.
-    $words_arr[0] = drupal_ucfirst($words_arr[0]);
+    $words_arr[0] = backdrop_ucfirst($words_arr[0]);
     for ($idx_1 = 1, $words_quantity = count($words_arr); $idx_1 < $words_quantity; ++$idx_1) {
       // Transforms this word only if it is not in the list of ignored words.
       if (!isset($ignored_words[$words_arr[$idx_1]])) {
-        $words_arr[$idx_1] = drupal_ucfirst($words_arr[$idx_1]);
+        $words_arr[$idx_1] = backdrop_ucfirst($words_arr[$idx_1]);
       }
     }
     $normalized_text = join(' ', $words_arr);
   }
   elseif ($capitalizator_mode === 'ucall') {
     // Transforms the text 'your first post' to 'YOUR FIRST POST'
-    $normalized_text = drupal_strtoupper($normalized_text);
+    $normalized_text = backdrop_strtoupper($normalized_text);
   }
   elseif ($capitalizator_mode === 'ucforce') {
     // Transforms the text 'your first post' to 'your first POST'
@@ -528,31 +522,31 @@ function _easy_breadcrumb_normalize_text($raw_text) {
     $forced_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS, '');
     // If case sensitivity is false make all the forced words uncapitalized by default.
     if (!variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY, FALSE)) {
-      $forced_words = array_map('drupal_strtolower', $forced_words);
+      $forced_words = array_map('backdrop_strtolower', $forced_words);
     }
     $words_arr = explode(' ', $normalized_text);
     // Transforms the non-ignored words of the segment.
     if (variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_FIRST_LETTER, '')) {
-      $words_arr[0] = drupal_ucfirst($words_arr[0]);
+      $words_arr[0] = backdrop_ucfirst($words_arr[0]);
     }
     for ($idx_1 = 0, $words_quantity = count($words_arr); $idx_1 < $words_quantity; ++$idx_1) {
     // If case sensitivity is false make the compared word uncapitalized in order to allow the comparison well.
       if (!variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY, FALSE)) {
-        $selected_word = drupal_strtolower($words_arr[$idx_1]);
+        $selected_word = backdrop_strtolower($words_arr[$idx_1]);
       }
       else {
         $selected_word = $words_arr[$idx_1];
       }
       // Transforms this word only if it is in the list of forced words.
       if (in_array($selected_word, $forced_words)) {
-        $words_arr[$idx_1] = drupal_strtoupper($selected_word);
+        $words_arr[$idx_1] = backdrop_strtoupper($selected_word);
       }
     }
     $normalized_text = join(' ', $words_arr);
   }
   else {
     // Transforms the text 'your first post' to 'Your first post' (ucfirst).
-    $normalized_text = drupal_ucfirst($normalized_text);
+    $normalized_text = backdrop_ucfirst($normalized_text);
   }
 
   return $normalized_text;
