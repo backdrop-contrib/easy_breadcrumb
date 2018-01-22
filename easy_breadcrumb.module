@@ -134,6 +134,7 @@ function template_preprocess_easy_breadcrumb(&$variables) {
   }
   foreach ($breadcrumbs as $i => $breadcrumb) {
     $content = decode_entities($breadcrumb['content']);
+    //$content = $breadcrumb['content'];
     if (isset($breadcrumb['url'])) {
       $variables['breadcrumb'][$i] = '<span itemprop="title">';
 
@@ -145,6 +146,7 @@ function template_preprocess_easy_breadcrumb(&$variables) {
       $variables['breadcrumb'][$i] .= l($content, $parsed_url['path'], array(
         'attributes' => array('class' => $breadcrumb['class']),
         'query' => $parsed_query,
+        'html' => $breadcrumb['html'],
       ));
 
       $variables['breadcrumb'][$i] .= '</span>';
@@ -352,10 +354,12 @@ function _easy_breadcrumb_build_item($item_title, $item_classes, $item_url, $as_
       variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_DOTS, TRUE)
     );
   }
+  $item = array('class' => $item_classes, 'html' => TRUE);
   if (!variable_get(EasyBreadcrumbConstants::DB_VAR_HTML_TAGS, TRUE)) {
     $item_title = strip_tags(html_entity_decode($item_title));
+    $item['html'] = TRUE;
   }
-  $item = array('content' => $item_title, 'class' => $item_classes);
+  $item['content'] = $item_title;
   if ($as_link) {
     $item['url'] = $item_url;
   }
