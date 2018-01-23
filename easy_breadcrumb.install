@@ -5,28 +5,93 @@
  */
 
 /**
- * Implements hook_uninstall().
- */
-function easy_breadcrumb_uninstall() {
-  require_once 'includes/EasyBreadcrumbConstants.inc';
-
-  // Use reflection for getting constants.
-  $o_class = new ReflectionClass('EasyBreadcrumbConstants');
-  $constants = $o_class->getConstants();
-
-  // Deletes all the created variables by this module.
-  foreach ($constants as $constant_name => $constant_value) {
-    // The database variables are named using the prefix 'DB_VAR'.
-    if (strpos($constant_name, 'DB_VAR_') === 0) {
-      variable_del($constant_value);
-    }
-  }
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function easy_breadcrumb_update_last_removed() {
   // Drupal sites upgrading to Backdrop need to be on at least this version.
   return 7001;
+}
+
+/**
+ * Implements hook_update_N(). Converts from variables to config.
+ */
+function easy_breadcrumb_update_1000() {
+  $config = config('easy_breadcrumb.settings');
+
+  $config->set('disable_default_breadcrumb', update_variable_get('easy_breadcrumb-disable_drupal_breadcrumb', TRUE));
+  $config->set('include_invalid_paths', update_variable_get('easy_breadcrumb-include_invalid_paths', TRUE));
+  $config->set('excluded_paths', update_variable_get('easy_breadcrumb-excluded_paths', _easy_breadcrumb_legacy_default_excluded_paths()));
+  $config->set('replaced_titles', update_variable_get('easy_breadcrumb-replaced_titles', ''));
+  $config->set('separator', update_variable_get('easy_breadcrumb-segments_separator', '»'));
+  $config->set('include_home', update_variable_get('easy_breadcrumb-include_home_segment', TRUE));
+  $config->set('home_title', update_variable_get('easy_breadcrumb-home_segment_title', 'Home'));
+  $config->set('include_title', update_variable_get('easy_breadcrumb-include_title_segment', TRUE));
+  $config->set('title_link', update_variable_get('easy_breadcrumb-title_segment_as_link', FALSE));
+  $config->set('title_from_page', update_variable_get('easy_breadcrumb-title_from_page_when_available', TRUE));
+  $config->set('caps_mode', update_variable_get('easy_breadcrumb-capitalizator_mode', 'ucwords'));
+  $config->set('caps_ignored_words', update_variable_get('easy_breadcrumb-capitalizator_ignored_words', _easy_breadcrumb_legacy_default_ignored_words()));
+  $config->set('caps_forced_words', update_variable_get('easy_breadcrumb-capitalizator_forced_words', ''));
+  $config->set('caps_forced_first', update_variable_get('easy_breadcrumb-capitalizator_forced_words_first_letter', TRUE));
+  $config->set('caps_forced_case', update_variable_get('easy_breadcrumb-capitalizator_forced_words_case_sensitivity', FALSE));
+  $config->set('seperator_end', update_variable_get('easy_breadcrumb-seperator_ending', FALSE));
+  $config->set('segment_url_text', update_variable_get('easy_breadcrumb-segment_text_as_title', FALSE));
+  $config->set('html', update_variable_get('easy_breadcrumb-html_tags', TRUE));
+  $config->set('truncate_mode', update_variable_get('easy_breadcrumb_truncator_mode', FALSE));
+  $config->set('truncate_length', update_variable_get('easy_breadcrumb_truncator_length', 25));
+  $config->set('truncate_dots', update_variable_get('easy_breadcrumb_truncator_dots', TRUE));
+
+  $config->save();
+
+  // Delete old variables.
+  update_variable_del('easy_breadcrumb-disable_drupal_breadcrumb');
+  update_variable_del('easy_breadcrumb-include_invalid_paths');
+  update_variable_del('easy_breadcrumb-excluded_paths');
+  update_variable_del('easy_breadcrumb-replaced_titles');
+  update_variable_del('easy_breadcrumb-segments_separator');
+  update_variable_del('easy_breadcrumb-include_home_segment');
+  update_variable_del('easy_breadcrumb-home_segment_title');
+  update_variable_del('easy_breadcrumb-include_title_segment');
+  update_variable_del('easy_breadcrumb-title_segment_as_link');
+  update_variable_del('easy_breadcrumb-title_from_page_when_available');
+  update_variable_del('easy_breadcrumb-capitalizator_mode');
+  update_variable_del('easy_breadcrumb-capitalizator_ignored_words');
+  update_variable_del('easy_breadcrumb-capitalizator_forced_words');
+  update_variable_del('easy_breadcrumb-capitalizator_forced_words_first_letter');
+  update_variable_del('easy_breadcrumb-capitalizator_forced_words_case_sensitivity');
+  update_variable_del('easy_breadcrumb-seperator_ending');
+  update_variable_del('easy_breadcrumb-segment_text_as_title');
+  update_variable_del('easy_breadcrumb-html_tags');
+  update_variable_del('easy_breadcrumb_truncator_mode');
+  update_variable_del('easy_breadcrumb_truncator_length');
+  update_variable_del('easy_breadcrumb_truncator_dots');
+
+  return t('Easy Breadcrumb varaibles converted to config.');
+}
+
+/**
+ * Legacy function. Helper function to set default values.
+ */
+function _easy_breadcrumb_legacy_default_ignored_words() {
+  return array(
+    'a',
+    'an',
+    'and',
+    'de',
+    'del',
+    'of',
+    'or',
+    'the',
+    'y',
+    'o',
+  );
+}
+
+/**
+ * Legacy function. Helper function to set default values.
+ */
+function _easy_breadcrumb_legacy_default_excluded_paths() {
+  return array(
+    'search',
+    'search/node',
+  );
 }

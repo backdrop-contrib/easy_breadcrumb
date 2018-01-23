@@ -5,12 +5,14 @@
  */
 
 /**
- * Implements hook_autoload_info().
+ * Implements hook_config_info().
  */
-function easy_breadcrumb_autoload_info() {
-  return array(
-    'EasyBreadcrumbConstants' => 'includes/EasyBreadcrumbConstants.inc',
+function easy_breadcrumb_config_info() {
+  $prefixes['easy_breadcrumb.settings'] = array(
+    'label' => t('System performance'),
+    'group' => t('Configuration'),
   );
+  return $prefixes;
 }
 
 /**
@@ -27,38 +29,14 @@ function easy_breadcrumb_permission() {
 
 /**
  * Implements hook_init().
+ *
+ * @todo See if we have a breadcrumb_alter or similar. This is expensive.
  */
 function easy_breadcrumb_init() {
-  $disable_backdrop_default_breadcrumb = variable_get(EasyBreadcrumbConstants::DB_VAR_DISABLE_DEFAULT_DRUPAL_BREADCRUMB, TRUE);
-  if ($disable_backdrop_default_breadcrumb) {
-    // Sets the Drupal's default breadcrumb as an empty array to disable it.
+  $disable_default_breadcrumb = config_get('easy_breadcrumb.settings', 'disable_default_breadcrumb');
+  if ($disable_default_breadcrumb) {
+    // Sets the default breadcrumb to an empty array to disable it.
     backdrop_set_breadcrumb(array());
-  }
-}
-
-/**
- * Implements hook_help().
- */
-function easy_breadcrumb_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#easy_breadcrumb':
-      $readme = file_get_contents(dirname(__FILE__) . '/README.md');
-      $output = '';
-
-      if (module_exists('markdown')) {
-        $filters = module_invoke('markdown', 'filter_info');
-        $info = $filters['filter_markdown'];
-
-        if (function_exists($info['process callback'])) {
-          $output = $info['process callback']($readme, NULL);
-        }
-      }
-
-      if ($output === '') {
-        $output = '<pre>' . $readme . '</pre>';
-      }
-
-      return $output;
   }
 }
 
@@ -72,7 +50,7 @@ function easy_breadcrumb_menu() {
     'description' => "Controls settings for the module Easy Breadcrumb",
     'file' => 'easy_breadcrumb.admin.inc',
     'page callback' => 'backdrop_get_form',
-    'page arguments' => array('_easy_breadcrumb_general_settings_form'),
+    'page arguments' => array('easy_breadcrumb_settings_form'),
     'access arguments' => array('administer easy_breadcrumb'),
   );
   return $items;
@@ -160,8 +138,9 @@ function template_preprocess_easy_breadcrumb(&$variables) {
     }
   }
   $variables['segments_quantity'] = count($variables['breadcrumb']);
-  $variables['separator_ending'] = variable_get(EasyBreadcrumbConstants::DB_VAR_SEPERATOR_ENDING, FALSE) ? 0 : 1;
-  $variables['separator'] = filter_xss(variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENTS_SEPARATOR, '»'));
+  $config = config('easy_breadcrumb.settings');
+  $variables['separator_ending'] = $config->get('seperator_end');
+  $variables['separator'] = filter_xss($config->get('separator'));
 }
 
 /**
@@ -171,12 +150,13 @@ function template_preprocess_easy_breadcrumb(&$variables) {
  *   Items of the breadcrumb.
  */
 function _easy_breadcrumb_build_items() {
+  $config = config('easy_breadcrumb.settings');
   // Array storing the breadcrumb's segments.
   $breadcrumb = array();
   // Default classes for the segments.
   $segments_classes = array('crumb');
   // Gets the flag saying if the front page segment should be included.
-  $include_front_page_segment = variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_HOME_SEGMENT, TRUE);
+  $include_front_page_segment = $config->get('include_home');
 
   // Conditionally include the front page segment in the breadcrumb.
   if ($include_front_page_segment) {
@@ -189,19 +169,18 @@ function _easy_breadcrumb_build_items() {
 
   // There won't be more segments if visiting the front page, the don't waste resources.
   if (!backdrop_is_front_page()) {
+
     // Gets the flag saying the capitalizator mode.
-    $capitalizator_mode = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE, 'ucwords');
+    $capitalizator_mode = $config->get('caps_mode');
 
     // List of words to be ignored by the capitalizator.
-    $capitalizator_ignored_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS,
-        EasyBreadcrumbConstants::defaultIgnoredWords());
+    $capitalizator_ignored_words = $config->get('caps_ignored_words');
 
     // Flag for including invalid paths as plain-text segments.
-    $include_invalid_paths = variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_INVALID_PATHS, TRUE);
+    $include_invalid_paths = $config->get('include_invalid_paths');
 
     // List of path to be excluded while generating segments.
-    $excluded_paths_arr = variable_get(EasyBreadcrumbConstants::DB_VAR_EXCLUDED_PATHS,
-          EasyBreadcrumbConstants::defaultExcludedPaths());
+    $excluded_paths_arr = $config->get('excluded_paths');
 
     // Obtains the alias of the current path.
     $alias = backdrop_get_path_alias();
@@ -282,7 +261,7 @@ function _easy_breadcrumb_build_items() {
     }
 
     // Gets the flag saying if the title should be appended to the breadcrumb.
-    $include_page_title_segment = variable_get(EasyBreadcrumbConstants::DB_VAR_INCLUDE_TITLE_SEGMENT, TRUE);
+    $include_page_title_segment = $config->get('include_title');
 
     // Adds the page's title to the breadcrumb.
     if ($include_page_title_segment && (arg(0) != 'user')) {
@@ -294,7 +273,7 @@ function _easy_breadcrumb_build_items() {
 
       _easy_breadcrumb_check_replaced_title($segment_title);
 
-      $title_segment_as_link = variable_get(EasyBreadcrumbConstants::DB_VAR_TITLE_SEGMENT_AS_LINK, FALSE);
+      $title_segment_as_link = $config->get('title_link');
       // If the page's title will be a link or just a text.
       $breadcrumb[] = _easy_breadcrumb_build_item($segment_title, $segments_classes, $alias, $title_segment_as_link);
     }
@@ -313,10 +292,11 @@ function _easy_breadcrumb_build_items() {
  *   The front-page's title.
  */
 function _easy_breadcrumb_obtain_home_title() {
-  $front_text = variable_get(EasyBreadcrumbConstants::DB_VAR_HOME_SEGMENT_TITLE);
+  $front_text = config_get('easy_breadcrumb.settings', 'home_title');
   if (isset($front_text) && $front_text !== '') {
     $front_text = t($front_text);
-  } else {
+  }
+  else {
     $front_text = t('Home');
   }
   return $front_text;
@@ -332,7 +312,7 @@ function _easy_breadcrumb_obtain_home_title() {
  *   the page's title.
  */
 function _easy_breadcrumb_obtain_page_title($page_text) {
-  $use_page_title_when_available = variable_get(EasyBreadcrumbConstants::DB_VAR_TITLE_FROM_PAGE_WHEN_AVAILABLE, TRUE);
+  $use_page_title_when_available = config_get('title_from_page', 'home_title');
   // Tries to get the title of the current page (if available).
   if ($use_page_title_when_available) {
     $title = backdrop_get_title();
@@ -360,16 +340,14 @@ function _easy_breadcrumb_obtain_page_title($page_text) {
  *   the generated breadcrumb item.
  */
 function _easy_breadcrumb_build_item($item_title, $item_classes, $item_url, $as_link = TRUE) {
-  if (variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_MODE, FALSE)) {
-    $item_title = truncate_utf8(
-      $item_title,
-      variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_LENGTH, 100),
-      TRUE,
-      variable_get(EasyBreadcrumbConstants::DB_VAR_TRUNCATOR_DOTS, TRUE)
-    );
+  $config = config('easy_breadcrumb.settings');
+  if ($config->get('truncate_mode')) {
+    $length = $config->get('truncate_length');
+    $dots = $config->get('truncate_dots');
+    $item_title = truncate_utf8($item_title, $length, TRUE, $dots);
   }
   $item = array('class' => $item_classes, 'html' => TRUE);
-  if (!variable_get(EasyBreadcrumbConstants::DB_VAR_HTML_TAGS, TRUE)) {
+  if (!$config->get('html')) {
     $item_title = strip_tags(html_entity_decode($item_title));
     $item['html'] = TRUE;
   }
@@ -405,7 +383,7 @@ function _easy_breadcrumb_validate_segment_path($segment_path) {
  *   String with segment title if necessary or FALSE otherwise.
  */
 function _easy_breadcrumb_check_replaced_title(&$segment_title) {
-  $replaced_titles = variable_get(EasyBreadcrumbConstants::DB_VAR_REPLACED_TITLES);
+  $replaced_titles = config_get('easy_breadcrumb.settings', 'replaced_titles');
 
   if (empty($replaced_titles)) {
     return FALSE;
@@ -435,8 +413,7 @@ function _easy_breadcrumb_check_replaced_title(&$segment_title) {
  */
 function _easy_breadcrumb_check_excluded_path($url) {
   // List of path to be excluded while generating segments.
-  $excluded_paths_arr = variable_get(EasyBreadcrumbConstants::DB_VAR_EXCLUDED_PATHS,
-    EasyBreadcrumbConstants::defaultExcludedPaths());
+  $excluded_paths_arr = config_get('easy_breadcrumb.settings', 'excluded_paths');
   $excluded = FALSE;
   foreach ($excluded_paths_arr as $excluded_path) {
     $exlusion_pattern = '@^' . $excluded_path . '$@';
@@ -469,7 +446,7 @@ function _easy_breadcrumb_obtain_segment_title($normal_path, $valid_path, $segme
   if ($valid_path) {
     $router_item = menu_get_item($normal_path);
     // If not using segment text as title then use the menu router title.
-    if (!variable_get(EasyBreadcrumbConstants::DB_VAR_SEGMENT_TEXT_AS_TITLE, FALSE)) {
+    if (!config_get('easy_breadcrumb.settings', 'segment_url_text')) {
       $title = $router_item['title'];
     }
   }
@@ -495,12 +472,13 @@ function _easy_breadcrumb_normalize_text($raw_text) {
   $normalized_text = trim($normalized_text);
   $normalized_text = preg_replace('/\s{2,}/', ' ', $normalized_text);
 
+  $config = config('easy_breadcrumb.settings');
   // Gets the flag saying the capitalizator mode.
-  $capitalizator_mode = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_MODE, 'ucwords');
+  $capitalizator_mode = $config->get('caps_mode');
   if ($capitalizator_mode === 'ucwords') {
     // Transforms the text 'your first post' to 'Your First Post'.
     // List of words to be ignored by the capitalizator.
-    $ignored_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_IGNORED_WORDS, EasyBreadcrumbConstants::defaultIgnoredWords());
+    $ignored_words = $config->get('caps_ignored_words');
     $words_arr = explode(' ', $normalized_text);
     // Transforms the non-ignored words of the segment.
     $words_arr[0] = backdrop_ucfirst($words_arr[0]);
@@ -519,19 +497,19 @@ function _easy_breadcrumb_normalize_text($raw_text) {
   elseif ($capitalizator_mode === 'ucforce') {
     // Transforms the text 'your first post' to 'your first POST'
     // List of words to be forced by the capitalizator.
-    $forced_words = variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS, '');
+    $forced_words = $config->get('caps_forced_words');
     // If case sensitivity is false make all the forced words uncapitalized by default.
-    if (!variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY, FALSE)) {
+    if (!$config->get('caps_forced_case')) {
       $forced_words = array_map('backdrop_strtolower', $forced_words);
     }
     $words_arr = explode(' ', $normalized_text);
     // Transforms the non-ignored words of the segment.
-    if (variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_FIRST_LETTER, '')) {
+    if ($config->get('caps_forced_first')) {
       $words_arr[0] = backdrop_ucfirst($words_arr[0]);
     }
     for ($idx_1 = 0, $words_quantity = count($words_arr); $idx_1 < $words_quantity; ++$idx_1) {
     // If case sensitivity is false make the compared word uncapitalized in order to allow the comparison well.
-      if (!variable_get(EasyBreadcrumbConstants::DB_VAR_CAPITALIZATOR_FORCED_WORDS_CASE_SENSITIVITY, FALSE)) {
+      if (!$config->get('caps_forced_case')) {
         $selected_word = backdrop_strtolower($words_arr[$idx_1]);
       }
       else {
