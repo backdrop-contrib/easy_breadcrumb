@@ -25,8 +25,8 @@ Installation
   https://backdropcms.org/guide/modules
 
 - Visit the configuration page under Administration > Configuration >
-  User Interface > Easy Breadcrumb (admin/config/category/foo) and enter the
-  required information.
+  User Interface > Easy Breadcrumb (admin/config/user-interface/easy-breadcrumb)
+  and enter the required information.
 
 Documentation
 -------------
