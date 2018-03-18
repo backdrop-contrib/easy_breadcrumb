@@ -246,7 +246,7 @@ function _easy_breadcrumb_build_items() {
       $segment_title = _easy_breadcrumb_obtain_segment_title($segment_normal_path, $segment_valid_path, $segment_text);
       _easy_breadcrumb_check_replaced_title($segment_title);
 
-      // Don't duplicate breadrcumbs for menu default local tasks.
+      // Don't duplicate breadcrumbs for menu default local tasks.
       if ($segment_title == $last_segment_title) {
         $item = menu_get_item($segment_url);
         if ($item['type'] != MENU_VISIBLE_IN_BREADCRUMB) {
