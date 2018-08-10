@@ -127,7 +127,7 @@ function template_preprocess_easy_breadcrumb(&$variables) {
       $variables['breadcrumb'][$i] .= l($content, $parsed_url['path'], array(
         'attributes' => array('class' => $breadcrumb['class']),
         'query' => $parsed_query,
-        'html' => $breadcrumb['html'],
+        'html' => (!empty($breadcrumb['html'])) ? $breadcrumb['html'] : FALSE,
       ));
 
       $variables['breadcrumb'][$i] .= '</span>';
