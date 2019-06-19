@@ -130,7 +130,6 @@ function template_preprocess_easy_breadcrumb(&$variables) {
     $variables['list_type'] = 'http://data-vocabulary.org/Breadcrumb';
   }
   foreach ($breadcrumbs as $i => $breadcrumb) {
-    $content = decode_entities($breadcrumb['content']);
     if (isset($breadcrumb['url'])) {
       $variables['breadcrumb'][$i] = '<span itemprop="title">';
 
@@ -139,7 +138,7 @@ function template_preprocess_easy_breadcrumb(&$variables) {
       if (isset($parsed_url['query'])) {
         parse_str($parsed_url['query'], $parsed_query);
       }
-      $variables['breadcrumb'][$i] .= l($content, $parsed_url['path'], array(
+      $variables['breadcrumb'][$i] .= l($breadcrumb['content'], $parsed_url['path'], array(
         'attributes' => array('class' => $breadcrumb['class']),
         'query' => $parsed_query,
         'html' => (!empty($breadcrumb['html'])) ? $breadcrumb['html'] : FALSE,
@@ -149,7 +148,7 @@ function template_preprocess_easy_breadcrumb(&$variables) {
     }
     else {
       $class = implode(' ', $breadcrumb['class']);
-      $variables['breadcrumb'][$i] = '<span class="' . $class . '" itemprop="title">' . check_plain($content) . '</span>';
+      $variables['breadcrumb'][$i] = '<span class="' . $class . '" itemprop="title">' . $breadcrumb['content'] . '</span>';
     }
   }
   $variables['segments_quantity'] = isset($variables['breadcrumb']) ? count($variables['breadcrumb']) : 0;
@@ -354,22 +353,34 @@ function _easy_breadcrumb_obtain_page_title($page_text) {
  * @return array
  *   the generated breadcrumb item.
  */
-function _easy_breadcrumb_build_item($item_title, $item_classes, $item_url, $as_link = TRUE) {
+function _easy_breadcrumb_build_item($item_title, array $item_classes, $item_url, $as_link = TRUE) {
   $config = config('easy_breadcrumb.settings');
+
+  if ($config->get('html')) {
+    $item_title = filter_xss($item_title);
+  }
+
   if ($config->get('truncate_mode')) {
     $length = $config->get('truncate_length');
     $dots = $config->get('truncate_dots');
     $item_title = truncate_utf8($item_title, $length, TRUE, $dots);
   }
-  $item = array('class' => $item_classes, 'html' => TRUE);
+
   if (!$config->get('html')) {
     $item_title = strip_tags(html_entity_decode($item_title));
     $item['html'] = TRUE;
   }
-  $item['content'] = $item_title;
+
+  $item = array(
+    'class' => $item_classes,
+    'html' => TRUE,
+    'content' => $item_title,
+  );
+
   if ($as_link) {
     $item['url'] = $item_url;
   }
+
   return $item;
 }
 
@@ -482,8 +493,10 @@ function _easy_breadcrumb_obtain_segment_title($normal_path, $valid_path, $segme
  *   normalized title.
  */
 function _easy_breadcrumb_normalize_text($raw_text) {
+  // Filter the raw text against XSS.
+  $normalized_text = check_url($raw_text);
   // Transforms '-hello--world_javascript-' on 'hello world javascript'.
-  $normalized_text = str_replace(array('-', '_'), ' ', $raw_text);
+  $normalized_text = str_replace(array('-', '_'), ' ', $normalized_text);
   $normalized_text = trim($normalized_text);
   $normalized_text = preg_replace('/\s{2,}/', ' ', $normalized_text);
 
