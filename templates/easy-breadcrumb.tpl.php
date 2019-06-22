@@ -3,7 +3,7 @@
     <h2 class="element-invisible">You are here</h2>
     <?php foreach ($breadcrumb as $i => $item): ?>
       <?php print $item; ?>
-        <?php if ($i < $segments_quantity - $separator_ending): ?>
+        <?php if (($i + 1) != $segments_quantity || $separator_ending): ?>
            <span class="separator"><?php print $separator; ?></span>
         <?php endif; ?>
     <?php endforeach; ?>

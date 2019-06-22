@@ -30,10 +30,10 @@ function easy_breadcrumb_settings_form() {
     '#title' => t('Breadcrumb separator:'),
     '#default_value' => $config->get('separator'),
   );
-  $form['general']['seperator_end'] = array(
+  $form['general']['separator_end'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show breadcrumb separator after the final breadcrumb.'),
-    '#default_value' => $config->get('seperator_end'),
+    '#default_value' => $config->get('separator_end'),
   );
 
   // Fieldset for grouping text settings.

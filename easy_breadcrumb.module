@@ -153,7 +153,7 @@ function template_preprocess_easy_breadcrumb(&$variables) {
   }
   $variables['segments_quantity'] = isset($variables['breadcrumb']) ? count($variables['breadcrumb']) : 0;
   $config = config('easy_breadcrumb.settings');
-  $variables['separator_ending'] = $config->get('seperator_end');
+  $variables['separator_ending'] = $config->get('separator_end');
   $variables['separator'] = filter_xss($config->get('separator'));
 }
 
