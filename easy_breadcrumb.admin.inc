@@ -44,7 +44,7 @@ function easy_breadcrumb_settings_form() {
   );
   $form['general']['first']['include_home'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Include the a link to the home page as the first breadcrumb.'),
+    '#title' => t('Include a link to the home page as the first breadcrumb.'),
     '#default_value' => $config->get('include_home'),
   );
   $form['general']['first']['home_title'] = array(
