@@ -23,11 +23,7 @@ function easy_breadcrumb_settings_form() {
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
-  $form['general']['disable_default_breadcrumb'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Disable the system breadcrumbs.'),
-    '#default_value' => $config->get('disable_default_breadcrumb'),
-  );
+
   $form['general']['separator'] = array(
     '#type' => 'textfield',
     '#size' => 10,
@@ -105,11 +101,29 @@ function easy_breadcrumb_settings_form() {
     '#description' => t('Enter paths or simple regular expressions. Place one on each line. Example: <em>report</em> or <em>report/2[0-9][0-9][0-9].</em>'),
     '#default_value' => $excluded_paths,
   );
+  $form['general']['disable_default_breadcrumb'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Disable the system breadcrumbs.'),
+    '#default_value' => $config->get('disable_default_breadcrumb'),
+    '#description' => t('When unchecked, breadrcumbs may appear twice on the page.'),
+  );
+
+  $form['general']['disable_admin_breadcrumb'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Disable the system breadcrumbs in the admin theme.'),
+    '#default_value' => $config->get('disable_admin_breadcrumb'),
+    '#description' => t('When the admin theme is the default theme, this setting will have no effect.'),
+  );
+  $site_theme = config_get('system.core', 'theme_default');
+  $admin_theme = config_get('system.core', 'admin_theme');
+  if ($site_theme == $admin_theme) {
+    $form['general']['disable_admin_breadcrumb']['#disabled'] = TRUE;
+  }
 
   // Fieldset for grouping text settings.
   $form['text'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Breadcrumb text settings'),
+    '#title' => t('Breadcrumb text'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );

@@ -33,10 +33,25 @@ function easy_breadcrumb_permission() {
  * @todo See if we have a breadcrumb_alter or similar. This is expensive.
  */
 function easy_breadcrumb_init() {
-  $disable_default_breadcrumb = config_get('easy_breadcrumb.settings', 'disable_default_breadcrumb');
-  if ($disable_default_breadcrumb) {
-    // Sets the default breadcrumb to an empty array to disable it.
-    backdrop_set_breadcrumb(array());
+  global $theme;
+  $site_theme = config_get('system.core', 'theme_default');
+  $admin_theme = config_get('system.core', 'admin_theme');
+
+  // Disable admin theme breadcrumb, but only if different than default theme.
+  if ($theme === $admin_theme && $site_theme !== $admin_theme) {
+    $disable_admin_breadcrumb = config_get('easy_breadcrumb.settings', 'disable_admin_breadcrumb');
+    if ($disable_admin_breadcrumb) {
+      // Sets the default breadcrumb to an empty array to disable it.
+      backdrop_set_breadcrumb(array());
+    }
+  }
+  // Disable default theme breadcrumbs.
+  else {
+    $disable_default_breadcrumb = config_get('easy_breadcrumb.settings', 'disable_default_breadcrumb');
+    if ($disable_drupal_default_breadcrumb) {
+      // Sets the default breadcrumb to an empty array to disable it.
+      backdrop_set_breadcrumb(array());
+    }
   }
 }
 
