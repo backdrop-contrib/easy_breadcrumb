@@ -326,7 +326,7 @@ function _easy_breadcrumb_obtain_home_title() {
  *   the page's title.
  */
 function _easy_breadcrumb_obtain_page_title($page_text) {
-  $use_page_title_when_available = config_get('title_from_page', 'home_title');
+  $use_page_title_when_available = config_get('easy_breadcrumb.settings', 'title_from_page');
   // Tries to get the title of the current page (if available).
   if ($use_page_title_when_available) {
     $title = backdrop_get_title();
