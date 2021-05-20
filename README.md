@@ -43,7 +43,8 @@ https://github.com/backdrop-contrib/easy_breadcrumb/issues
 Current Maintainers
 -------------------
 
-- Jen Lampton (https://github.com/jenlampton)
+- [Jen Lampton](https://github.com/jenlampton)
+- [Laryn Kragt Bakker](https://github.com/laryn) - [CEDC.org](https://cedc.org)
 - Seeking additional maintainers
 
 Credits
