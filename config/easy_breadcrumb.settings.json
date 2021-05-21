@@ -4,7 +4,7 @@
     "disable_default_breadcrumb": 1,
     "disable_admin_breadcrumb": 0,
     "include_invalid_paths": 1,
-    "excluded_paths": "",
+    "excluded_paths": [],
     "replaced_titles": "",
     "separator": "»",
     "include_home": 1,
@@ -21,7 +21,7 @@
     "segment_url_text": 0,
     "html": 1,
     "truncate_mode": 0,
-    "truncate_length": "25",
+    "truncate_length": 25,
     "truncate_dots": 1,
-    "Limit the breadcrumb": "25"
+    "Limit the breadcrumb": 25
 }
