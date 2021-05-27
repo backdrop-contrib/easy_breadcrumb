@@ -54,7 +54,7 @@ function easy_breadcrumb_settings_form() {
     '#attributes' => array('placeholder' => 'Home'),
     '#states' => array(
       'visible' => array(
-        ':input[name="' . include_home . '"]' => array('checked' => TRUE),
+        ':input[name="include_home"]' => array('checked' => TRUE),
       ),
     ),
   );
@@ -75,7 +75,7 @@ function easy_breadcrumb_settings_form() {
     '#default_value' => $config->get('title_link'),
     '#states' => array(
       'visible' => array(
-        ':input[name="' . include_title . '"]' => array('checked' => TRUE),
+        ':input[name="include_title"]' => array('checked' => TRUE),
       ),
     ),
   );
@@ -161,10 +161,10 @@ function easy_breadcrumb_settings_form() {
     '#attributes' => array('placeholder' => '25'),
     '#states' => array(
       'visible' => array(
-        ':input[name="' . truncate_mode . '"]' => array('checked' => TRUE),
+        ':input[name="truncate_mode"]' => array('checked' => TRUE),
       ),
       'invisible' => array(
-        ':input[name="' . truncate_mode . '"]' => array('checked' => FALSE),
+        ':input[name="truncate_mode"]' => array('checked' => FALSE),
       ),
     ),
   );
@@ -175,10 +175,10 @@ function easy_breadcrumb_settings_form() {
     '#default_value' => $config->get('truncate_dots'),
     '#states' => array(
       'visible' => array(
-        ':input[name="' . truncate_mode . '"]' => array('checked' => TRUE),
+        ':input[name="truncate_mode"]' => array('checked' => TRUE),
       ),
       'invisible' => array(
-        ':input[name="' . truncate_mode . '"]' => array('checked' => FALSE),
+        ':input[name="truncate_mode"]' => array('checked' => FALSE),
       ),
     ),
   );
@@ -227,10 +227,10 @@ function easy_breadcrumb_settings_form() {
     '#default_value' => $capitalizator_ignored_words,
     '#states' => array(
       'visible' => array(
-        ':input[name="' . caps_mode . '"]' => array('value' => 'ucwords'),
+        ':input[name="caps_mode"]' => array('value' => 'ucwords'),
       ),
       'invisible' => array(
-        ':input[name="' . caps_mode . '"]' => array('!value' => 'ucwords'),
+        ':input[name="caps_mode"]' => array('!value' => 'ucwords'),
       )
     )
   );
@@ -249,10 +249,10 @@ function easy_breadcrumb_settings_form() {
     '#attributes' => array('placeholder' => 'NASA'),
     '#states' => array(
       'visible' => array(
-        ':input[name="' . caps_mode . '"]' => array('value' => 'ucforce'),
+        ':input[name="caps_mode"]' => array('value' => 'ucforce'),
       ),
       'invisible' => array(
-        ':input[name="' . caps_mode . '"]' => array('!value' => 'ucforce'),
+        ':input[name="caps_mode"]' => array('!value' => 'ucforce'),
       )
     )
   );
@@ -263,10 +263,10 @@ function easy_breadcrumb_settings_form() {
     '#default_value' => $config->get('caps_forced_case'),
     '#states' => array(
       'visible' => array(
-        ':input[name="' . caps_mode . '"]' => array('value' => 'ucforce'),
+        ':input[name="caps_mode"]' => array('value' => 'ucforce'),
       ),
       'invisible' => array(
-        ':input[name="' . caps_mode . '"]' => array('!value' => 'ucforce'),
+        ':input[name="caps_mode"]' => array('!value' => 'ucforce'),
       )
     ),
     '#description' => t('When unchecked, backdrop will match both Backdrop and BACKDROP.'),
@@ -278,10 +278,10 @@ function easy_breadcrumb_settings_form() {
     '#default_value' => $config->get('caps_forced_first'),
     '#states' => array(
       'visible' => array(
-        ':input[name="' . caps_mode . '"]' => array('value' => 'ucforce'),
+        ':input[name="caps_mode"]' => array('value' => 'ucforce'),
       ),
       'invisible' => array(
-        ':input[name="' . caps_mode . '"]' => array('!value' => 'ucforce'),
+        ':input[name="caps_mode"]' => array('!value' => 'ucforce'),
       )
     )
   );
@@ -297,7 +297,7 @@ function easy_breadcrumb_settings_form_validate($form, &$form_state) {
   // Replaces line-endings by spaces and splits words by spaces.
   // E.g.: array('of','and').
   $ignored_words_arr = array();
-  $ignored_words = $form_state['values'][caps_ignored_words];
+  $ignored_words = $form_state['values']['caps_ignored_words'];
   $ignored_words = preg_replace('/\r*\n+/', ' ', $ignored_words);
   $ignored_words = trim($ignored_words);
   $ignored_words_arr_aux = $ignored_words === '' ? array() : preg_split('/\s+/', $ignored_words);
@@ -306,7 +306,7 @@ function easy_breadcrumb_settings_form_validate($form, &$form_state) {
   }
 
   $excluded_paths_arr = array();
-  $excluded_paths = $form_state['values'][excluded_paths];
+  $excluded_paths = $form_state['values']['excluded_paths'];
   $excluded_paths = trim($excluded_paths);
   $excluded_paths = preg_replace('/\s+/', "\r\n", $excluded_paths);
   $excluded_paths_arr_aux = $excluded_paths === '' ? array() : preg_split('/\r*\n+/', $excluded_paths);
@@ -316,15 +316,15 @@ function easy_breadcrumb_settings_form_validate($form, &$form_state) {
   }
 
   $forced_words_arr = array();
-  $forced_words = $form_state['values'][caps_forced_words];
+  $forced_words = $form_state['values']['caps_forced_words'];
   $forced_words = preg_replace('/\r*\n+/', ' ', $forced_words);
   $forced_words = trim($forced_words);
   $forced_words_arr_aux = $forced_words === '' ? array() : preg_split('/\s+/', $forced_words);
   foreach ($forced_words_arr_aux as $word) {
     $forced_words_arr[$word] = $word;
   }
-  // Updates the $form_state before passing it to the Drupal system.
-  $form_state['values'][caps_ignored_words] = $ignored_words_arr;
-  $form_state['values'][DB_VAR_EXCLUDED_PATHS] = $excluded_paths_arr;
-  $form_state['values'][caps_forced_words] = $forced_words_arr;
+  // Updates the $form_state before passing it to the Backdrop system.
+  $form_state['values']['caps_ignored_words'] = $ignored_words_arr;
+  $form_state['values']['excluded_paths'] = $excluded_paths_arr;
+  $form_state['values']['caps_forced_words'] = $forced_words_arr;
 }
