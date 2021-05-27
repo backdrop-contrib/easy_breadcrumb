@@ -33,7 +33,7 @@ function easy_breadcrumb_update_1000() {
   $config->set('caps_forced_words', update_variable_get('easy_breadcrumb-capitalizator_forced_words', ''));
   $config->set('caps_forced_first', update_variable_get('easy_breadcrumb-capitalizator_forced_words_first_letter', TRUE));
   $config->set('caps_forced_case', update_variable_get('easy_breadcrumb-capitalizator_forced_words_case_sensitivity', FALSE));
-  $config->set('seperator_end', update_variable_get('easy_breadcrumb-seperator_ending', FALSE));
+  $config->set('separator_end', update_variable_get('easy_breadcrumb-seperator_ending', FALSE));
   $config->set('segment_url_text', update_variable_get('easy_breadcrumb-segment_text_as_title', FALSE));
   $config->set('html', update_variable_get('easy_breadcrumb-html_tags', TRUE));
   $config->set('truncate_mode', update_variable_get('easy_breadcrumb_truncator_mode', FALSE));

@@ -187,7 +187,7 @@ function easy_breadcrumb_settings_form() {
   $form['text']['replaced_titles'] = array(
     '#type' => 'textarea',
     '#title' => t('Breadcrumb text to be replaced'),
-    '#description' => t('Enter current breadcrumb and replacement text seperated by two colons (::). Place one breadcrumb on each line.'),
+    '#description' => t('Enter current breadcrumb and replacement text separated by two colons (::). Place one breadcrumb on each line.'),
     '#attributes' => array('placeholder' => 'Administration::Admin'),
     '#default_value' => $replaced_titles,
   );
