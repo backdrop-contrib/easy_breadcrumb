@@ -126,7 +126,8 @@ function template_preprocess_easy_breadcrumb(&$variables) {
   $variables['list_type'] = 'https://schema.org/BreadcrumbList';
   foreach ($breadcrumbs as $i => $breadcrumb) {
     if (isset($breadcrumb['url'])) {
-      $variables['breadcrumb'][$i] = '<span>';
+      $variables['is_link'][$i] = 1;
+      $variables['breadcrumb'][$i] = '';
 
       $parsed_query = '';
       $parsed_url = parse_url($breadcrumb['url']);
@@ -136,7 +137,7 @@ function template_preprocess_easy_breadcrumb(&$variables) {
       $variables['breadcrumb'][$i] .= l('<span itemprop="name">' . $breadcrumb['content'] . '</span>', $parsed_url['path'], array(
         'attributes' => array(
           'class' => $breadcrumb['class'],
-          'itemtype' => "http://schema.org/Thing",
+          'itemtype' => "https://schema.org/Thing",
           'itemprop' => "item",
           'itemscope' => "",
           'itemid' => check_plain(url($breadcrumb['url'], array('absolute' => TRUE,))),
@@ -144,10 +145,9 @@ function template_preprocess_easy_breadcrumb(&$variables) {
         'query' => $parsed_query,
         'html' => (!empty($breadcrumb['html'])) ? $breadcrumb['html'] : FALSE,
       ));
-
-      $variables['breadcrumb'][$i] .= '</span>';
     }
     else {
+      $variables['is_link'][$i] = 0;
       $class = implode(' ', $breadcrumb['class']);
       $variables['breadcrumb'][$i] = '<span class="' . $class . '" itemprop="name">' . $breadcrumb['content'] . '</span>';
     }
