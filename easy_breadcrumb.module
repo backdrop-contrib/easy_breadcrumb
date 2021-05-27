@@ -128,7 +128,7 @@ function template_preprocess_easy_breadcrumb(&$variables) {
     if (isset($breadcrumb['url'])) {
       $variables['breadcrumb'][$i] = '<span>';
 
-      $parsed_query = '';
+      $parsed_query = array();
       $parsed_url = parse_url($breadcrumb['url']);
       if (isset($parsed_url['query'])) {
         parse_str($parsed_url['query'], $parsed_query);
