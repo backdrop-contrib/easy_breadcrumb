@@ -7,8 +7,7 @@ breadcrumb trail.
 The Easy Breadcrumb block uses the current URL alias and the current page's
 title to automatically extract the breadcrumbs and respective links. It also
 includes the current page title as the final unlinked crumb which follows
-breadcrumb best-practices. See
-https://www.nngroup.com/articles/breadcrumb-navigation-useful.
+[breadcrumb best-practices](https://www.nngroup.com/articles/breadcrumb-navigation-useful).
 
 Easy Breadcrumb takes advantage of the work you've already done for generating
 your path aliases, and naturally encourages the creation of semantic and
@@ -21,24 +20,21 @@ This module is currently available for Drupal 6, 7, 8, and Backdrop CMS.
 Installation
 ------------
 
-- Install this module using the official Backdrop CMS instructions at
-  https://backdropcms.org/guide/modules
+- Install this module using the official [Backdrop CMS instructions](https://backdropcms.org/guide/modules)
 
-- Visit the configuration page under Administration > Configuration >
-  User Interface > Easy Breadcrumb (admin/config/user-interface/easy-breadcrumb)
+- Visit the configuration page under **Administration > Configuration >
+  User Interface > Easy Breadcrumb** (**admin/config/user-interface/easy-breadcrumb**)
   and enter the required information.
 
 Documentation
 -------------
 
-Additional documentation is located in the Wiki:
-https://github.com/backdrop-contrib/easy_breadcrumb/wiki/Documentation
+Additional documentation is located in the [Wiki](https://github.com/backdrop-contrib/easy_breadcrumb/wiki/Documentation)
 
 Issues
 ------
 
-Bugs and Feature requests should be reported in the Issue Queue:
-https://github.com/backdrop-contrib/easy_breadcrumb/issues
+Bugs and Feature requests should be reported in the [Issue Queue](https://github.com/backdrop-contrib/easy_breadcrumb/issues)
 
 Current Maintainers
 -------------------
@@ -50,10 +46,10 @@ Current Maintainers
 Credits
 -------
 
-- Maintained for Drupal by [Greg Boggs](https://www.drupal.org/u/greg-boggs)
-- Maintained for Drupal by [Balazs Janos Tatar - tatarbj](https://www.drupal.org/u/tatarbj)
-- Maintained for Drupal by [Roger Padilla - sonemonu](https://www.drupal.org/u/sonemonu)
-- Maintained for Drupal by [Jeff Mahoney - loopduplicate](https://www.drupal.org/u/loopduplicate)
+- Maintained for Drupal by [Greg Boggs](https://drupal.org/u/greg-boggs)
+- Maintained for Drupal by [Balazs Janos Tatar - tatarbj](https://drupal.org/u/tatarbj)
+- Maintained for Drupal by [Roger Padilla - sonemonu](https://drupal.org/u/sonemonu)
+- Maintained for Drupal by [Brooke Mahoney - loopduplicate](https://drupal.org/u/loopduplicate)
 
 License
 -------
