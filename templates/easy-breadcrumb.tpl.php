@@ -2,7 +2,7 @@
   <nav itemscope class="breadcrumb easy-breadcrumb" itemtype="<?php print $list_type; ?>" role="navigation">
     <h2 class="element-invisible">You are here</h2>
     <?php foreach ($breadcrumb as $i => $item): ?>
-      <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+      <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
         <?php print $item; ?>
         <meta itemprop="position" content="<?php print $i; ?>" />
       </span>

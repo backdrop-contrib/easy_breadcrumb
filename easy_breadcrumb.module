@@ -136,9 +136,9 @@ function template_preprocess_easy_breadcrumb(&$variables) {
       $variables['breadcrumb'][$i] .= l('<span itemprop="name">' . $breadcrumb['content'] . '</span>', $parsed_url['path'], array(
         'attributes' => array(
           'class' => $breadcrumb['class'],
-          'itemtype' => "http://schema.org/Thing",
-          'itemprop' => "item",
-          'itemscope' => "",
+          'itemtype' => 'https://schema.org/Thing',
+          'itemprop' => 'item',
+          'itemscope' => '',
           'itemid' => check_plain(url($breadcrumb['url'], array('absolute' => TRUE,))),
         ),
         'query' => $parsed_query,
