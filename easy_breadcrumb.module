@@ -9,7 +9,7 @@
  */
 function easy_breadcrumb_config_info() {
   $prefixes['easy_breadcrumb.settings'] = array(
-    'label' => t('System performance'),
+    'label' => t('Easy Breadcrumb settings'),
     'group' => t('Configuration'),
   );
   return $prefixes;
