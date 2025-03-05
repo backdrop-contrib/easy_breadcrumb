@@ -97,7 +97,7 @@ function easy_breadcrumb_block_info() {
   $block['easy_breadcrumb'] = array(
     'info' => t('Easy Breadcrumb'),
     'description' => t('Replacement for the system breadcrumb block.'),
-    'cache' => DRUPAL_CACHE_PER_PAGE,
+    'cache' => BACKDROP_CACHE_PER_PAGE,
   );
   return $block;
 }
