@@ -30,7 +30,7 @@ function easy_breadcrumb_update_1000() {
   $config->set('title_from_page', update_variable_get('easy_breadcrumb-title_from_page_when_available', TRUE));
   $config->set('caps_mode', update_variable_get('easy_breadcrumb-capitalizator_mode', 'ucwords'));
   $config->set('caps_ignored_words', update_variable_get('easy_breadcrumb-capitalizator_ignored_words', _easy_breadcrumb_legacy_default_ignored_words()));
-  $config->set('caps_forced_words', update_variable_get('easy_breadcrumb-capitalizator_forced_words', ''));
+  $config->set('caps_forced_words', update_variable_get('easy_breadcrumb-capitalizator_forced_words', []));
   $config->set('caps_forced_first', update_variable_get('easy_breadcrumb-capitalizator_forced_words_first_letter', TRUE));
   $config->set('caps_forced_case', update_variable_get('easy_breadcrumb-capitalizator_forced_words_case_sensitivity', FALSE));
   $config->set('separator_end', update_variable_get('easy_breadcrumb-seperator_ending', FALSE));
